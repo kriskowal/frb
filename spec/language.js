@@ -1076,6 +1076,26 @@ module.exports = [
         }
     },
 
+    {
+        path: "\n@foo {\n    on action -> @foo, extra: 10;\n}\n\n",
+        syntax: {type: "sheet", blocks: [
+            {type: "block", label: "foo", statements: [
+                {
+                    type: "event",
+                    event: "action",
+                    when: "on",
+                    listener: {type: "component", label: "foo"},
+                    descriptor: {
+                        extra: {type: "literal", value: 10}
+                    }
+                }
+            ]}
+        ]},
+        options: {
+            startRule: "sheet"
+        }
+    },
+
     // Invalid syntax
 
     {

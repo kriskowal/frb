@@ -467,15 +467,33 @@ sheet
     }
 
 block
-    = "@" name:word _ annotation:annotation? "{" _ statements:statements "}" _ {
+    = "@" label:word _ module:module _ exports:( !"{" expression ) _ "{" _ statements:statements "}" _ {
         return {
             type: "block",
-            connection: annotation.connection,
-            module: annotation.module,
-            exports: annotation.exports,
-            label: name,
+            label: label,
+            connection: "prototype",
+            module: module,
+            exports: exports !== "" ? exports[1] : undefined,
             statements: statements
         };
+    }
+    / "@" label:word _ module:module _ exports:( !"{" expression ) _ ":" _ value:expression _ ";" _ {
+        if (exports) {
+        } else {
+        }
+        return {
+            type: "block",
+            label: label,
+            connection: "prototype",
+            module: module,
+            exports: exports !== "" ? exports[1] : undefined,
+            statements: statements
+        };
+    }
+
+module
+    = chars:[a-zA-Z_0-9.-]+ {
+        return chars.join("");
     }
 
 annotation
@@ -506,8 +524,18 @@ statements
     }
 
 statement
-    = when:("on" / "before") " " _ type:word _ "->" _ listener:expression _ {
-        return {type: "event", when: when, event: type, listener: listener};
+    = when:("on" / "before") " " _ type:word _ "->" _ listener:expression _
+      descriptor:("," _ name:word _ ":" _ expression:expression _)*
+    {
+        var result = {type: "event", when: when, event: type, listener: listener};
+        if (descriptor.length) {
+            var describe = {};
+            for (var i = 0; i < descriptor.length; i++) {
+                describe[descriptor[i][2]] = descriptor[i][6];
+            }
+            result.descriptor = describe;
+        }
+        return result;
     }
     / target:expression _ arrow:(":" / "<->" / "<-") _ source:expression _
       descriptor:("," _ name:word _ ":" _ expression:expression _)*

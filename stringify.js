@@ -221,7 +221,17 @@ stringify.semantics = {
         },
 
         event: function (syntax, scope, stringify) {
-            return syntax.when + " " + syntax.event + " -> " + stringify(syntax.listener, scope);
+            var header = syntax.when + " " + syntax.event + " -> " + stringify(syntax.listener, scope);
+            var trailer = "";
+
+            var descriptor = syntax.descriptor;
+            if (descriptor) {
+                for (var name in descriptor) {
+                    trailer += ", " + name + ": " + stringify(descriptor[name], scope);
+                }
+            }
+
+            return header + trailer;
         },
 
         binding: function (arrow, syntax, scope, stringify) {
