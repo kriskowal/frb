@@ -1046,40 +1046,6 @@ module.exports = [
     // Extended component sheet syntax
 
     {
-        path: "\n@foo < 'module' Module {\n}\n\n",
-        syntax: {type: "sheet", statements: [], blocks: [
-            {type: "block",
-                label: "foo",
-                module: "module",
-                exports: {type: "property", args: [
-                    {type: "value"},
-                    {type: "literal", value: "Module"},
-                ]},
-                connection: "prototype",
-                statements: []
-            }
-        ]},
-        options: {
-            startRule: "sheet"
-        }
-    },
-
-    {
-        path: "\n@foo : 'module' {\n}\n\n",
-        syntax: {type: "sheet", statements: [], blocks: [
-            {type: "block",
-                label: "foo",
-                module: "module",
-                connection: "object",
-                statements: []
-            }
-        ]},
-        options: {
-            startRule: "sheet"
-        }
-    },
-
-    {
         path: "\n@foo {\n    a <-> b;\n}\n\n",
         syntax: {type: "sheet", statements: [], blocks: [
             {type: "block", label: "foo", statements: [
@@ -1186,6 +1152,26 @@ module.exports = [
             ]}
         ], blocks: [
             {type: "block", label: "foo", statements: []}
+        ]},
+        options: {
+            startRule: "sheet"
+        }
+    },
+
+    {
+        path: "\n@foo {\n    on action @foo, extra: 10;\n}\n\n",
+        syntax: {type: "sheet", statements: [], blocks: [
+            {type: "block", label: "foo", statements: [
+                {
+                    type: "event",
+                    event: "action",
+                    phase: "on",
+                    handler: {type: "component", label: "foo"},
+                    descriptor: {type: "record", args: {
+                        extra: {type: "literal", value: 10}
+                    }}
+                }
+            ]}
         ]},
         options: {
             startRule: "sheet"

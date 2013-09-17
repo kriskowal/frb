@@ -9,10 +9,10 @@ describe("stringify", function () {
             it("should stringify " + JSON.stringify(test.syntax), function () {
                 expect(stringify(test.syntax)).toEqual(test.path);
             });
-            it("stringify should round-trip through parse " + JSON.stringify(test.syntax), function () {
+            it("stringify should round-trip through parse " + JSON.stringify(test.path), function () {
                 expect(stringify(parse(test.path, test.options))).toEqual(test.path);
             });
-            it("parse should round-trip through stringify " + JSON.stringify(test.syntax), function () {
+            it("parse should round-trip through stringify " + JSON.stringify(test.path), function () {
                 expect(parse(stringify(test.syntax), test.options)).toEqual(test.syntax);
             });
         }

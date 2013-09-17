@@ -212,7 +212,18 @@ stringify.semantics = {
         },
 
         event: function (syntax, scope, stringify) {
-            return syntax.phase + " " + syntax.event + " " + stringify(syntax.handler, scope);
+            var header = syntax.phase + " " + syntax.event + " " + stringify(syntax.handler, scope);
+
+            var trailer = "";
+
+            var descriptor = syntax.descriptor;
+            if (descriptor) {
+                for (var name in descriptor.args) {
+                    trailer += ", " + name + ": " + stringify(descriptor.args[name], scope);
+                }
+            }
+
+            return header + trailer;
         },
 
         binding: function (arrow, syntax, scope, stringify) {

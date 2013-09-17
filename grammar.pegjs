@@ -481,32 +481,32 @@ sheet
     }
 
 block
-    = "@" name:word _ annotation:annotation? "{" _ statements:statement* "}" _ {
+    = "@" label:word _ "{" _ statements:statement* "}" _ {
         return {
             type: "block",
-            connection: annotation.connection,
-            module: annotation.module,
-            exports: annotation.exports,
-            label: name,
+            label: label,
             statements: statements
         };
     }
 
-annotation
-    = connection:("<" / ":") _ module:string? _ exports:( !"{" expression )? _ {
-        return {
-            connection: {"<": "prototype", ":": "object"}[connection],
-            module: module && module.value,
-            exports: exports !== "" ? exports[1] : undefined
-        }
-    }
-    / _ {
-        return {};
+module
+    = chars:[a-zA-Z_0-9.-]+ {
+        return chars.join("");
     }
 
 statement
-    = phase:("on" / "handle" / "capture" / "before") " " _ type:word _ handler:expression _ ";" _ {
-        return {type: "event", phase: phase, event: type, handler: handler};
+    = phase:("on" / "handle" / "capture" / "before") " " _ type:word _ handler:expression _
+      descriptor:("," _ name:word _ ":" _ expression:expression _)* ";" _
+    {
+        var result = {type: "event", phase: phase, event: type, handler: handler};
+        if (descriptor.length) {
+            var describe = {};
+            for (var i = 0; i < descriptor.length; i++) {
+                describe[descriptor[i][2]] = descriptor[i][6];
+            }
+            result.descriptor = {type: "record", args: describe};
+        }
+        return result;
     }
     / target:expression _ arrow:(":" / "<->" / "<-") _ source:expression _
       descriptor:("," _ name:word _ ":" _ expression:expression _)* _ ";" _
