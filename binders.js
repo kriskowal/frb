@@ -376,6 +376,12 @@ function makeDefinedBinder(bindTarget) {
     }
 }
 
+exports.makeParentBinder = makeParentBinder;
+function makeParentBinder(bindTarget) {
+    return function bindParent(observeSource, sourceScope, targetScope, descriptor, trace) {
+        return bindTarget(observeSource, sourceScope, targetScope.parent, descriptor, trace);
+    };
+}
 
 function isActive(target) {
     return (

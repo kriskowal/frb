@@ -23,7 +23,8 @@ compile.semantics = {
         mapContent: Binders.makeMapContentBinder,
         reversed: Binders.makeReversedBinder,
         and: Binders.makeAndBinder,
-        or: Binders.makeOrBinder
+        or: Binders.makeOrBinder,
+        parent: Binders.makeParentBinder
     },
 
     compile: function (syntax) {
