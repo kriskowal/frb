@@ -1047,7 +1047,7 @@ module.exports = [
 
     {
         path: "\n@foo < 'module' Module {\n}\n\n",
-        syntax: {type: "sheet", blocks: [
+        syntax: {type: "sheet", statements: [], blocks: [
             {type: "block",
                 label: "foo",
                 module: "module",
@@ -1066,7 +1066,7 @@ module.exports = [
 
     {
         path: "\n@foo : 'module' {\n}\n\n",
-        syntax: {type: "sheet", blocks: [
+        syntax: {type: "sheet", statements: [], blocks: [
             {type: "block",
                 label: "foo",
                 module: "module",
@@ -1081,7 +1081,7 @@ module.exports = [
 
     {
         path: "\n@foo {\n    a <-> b;\n}\n\n",
-        syntax: {type: "sheet", blocks: [
+        syntax: {type: "sheet", statements: [], blocks: [
             {type: "block", label: "foo", statements: [
                 {type: "bind2", args: [
                     {type: "property", args: [
@@ -1102,7 +1102,7 @@ module.exports = [
 
     {
         path: "\n@foo {\n    a <-> b, converter: @converter;\n}\n\n",
-        syntax: {type: "sheet", blocks: [
+        syntax: {type: "sheet", statements: [], blocks: [
             {type: "block", label: "foo", statements: [
                 {type: "bind2", args: [
                     {type: "property", args: [
@@ -1113,9 +1113,9 @@ module.exports = [
                         {type: "value"},
                         {type: "literal", value: "b"}
                     ]}
-                ], descriptor: {
+                ], descriptor: {type: "record", args: {
                     converter: {type: "component", label: "converter"}
-                }}
+                }}}
             ]}
         ]},
         options: {
@@ -1125,7 +1125,7 @@ module.exports = [
 
     {
         path: "\n@foo {\n    a: 10;\n}\n\n",
-        syntax: {type: "sheet", blocks: [
+        syntax: {type: "sheet", statements: [], blocks: [
             {type: "block", label: "foo", statements: [
                 {type: "assign", args: [
                     {type: "property", args: [
@@ -1142,16 +1142,50 @@ module.exports = [
     },
 
     {
-        path: "\n@foo {\n    on action -> @foo;\n}\n\n",
-        syntax: {type: "sheet", blocks: [
+        path: "\n@foo {\n    on action @foo;\n}\n\n",
+        syntax: {type: "sheet", statements: [], blocks: [
             {type: "block", label: "foo", statements: [
                 {
                     type: "event",
                     event: "action",
-                    when: "on",
-                    listener: {type: "component", label: "foo"}
+                    phase: "on",
+                    handler: {type: "component", label: "foo"}
                 }
             ]}
+        ]},
+        options: {
+            startRule: "sheet"
+        }
+    },
+
+    {
+        path: "\na: 10;\n\n",
+        syntax: {type: "sheet", statements: [
+            {type: "assign", args: [
+                {type: "property", args: [
+                    {type: "value"},
+                    {type: "literal", value: "a"}
+                ]},
+                {type: "literal", value: 10}
+            ]}
+        ], blocks: []},
+        options: {
+            startRule: "sheet"
+        }
+    },
+
+    {
+        path: "\na: 10;\n\n@foo {\n}\n\n",
+        syntax: {type: "sheet", statements: [
+            {type: "assign", args: [
+                {type: "property", args: [
+                    {type: "value"},
+                    {type: "literal", value: "a"}
+                ]},
+                {type: "literal", value: 10}
+            ]}
+        ], blocks: [
+            {type: "block", label: "foo", statements: []}
         ]},
         options: {
             startRule: "sheet"

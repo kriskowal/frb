@@ -466,12 +466,22 @@ comment
 // MCS extensions
 
 sheet
-    = _ blocks:block* _ {
-        return {type: "sheet", blocks: blocks};
+    = _ parts:(block / statement)* _ {
+        var statements = [];
+        var blocks = [];
+        for (var i = 0; i < parts.length; i++) {
+            var part = parts[i];
+            if (part.type === "block") {
+                blocks.push(part);
+            } else {
+                statements.push(part);
+            }
+        }
+        return {type: "sheet", statements: statements, blocks: blocks};
     }
 
 block
-    = "@" name:word _ annotation:annotation? "{" _ statements:statements "}" _ {
+    = "@" name:word _ annotation:annotation? "{" _ statements:statement* "}" _ {
         return {
             type: "block",
             connection: annotation.connection,
@@ -494,27 +504,12 @@ annotation
         return {};
     }
 
-statements
-    = head:statement _ tail:(";" _ statement _)* ";"? _ {
-        var result = [head];
-        for (var i = 0; i < tail.length; i++) {
-            result.push(tail[i][2]);
-        }
-        return result;
-    }
-    / statement:statement _ ";"? _ {
-        return [statement];
-    }
-    / _ {
-        return [];
-    }
-
 statement
-    = when:("on" / "before") " " _ type:word _ "->" _ listener:expression _ {
-        return {type: "event", when: when, event: type, listener: listener};
+    = phase:("on" / "handle" / "capture" / "before") " " _ type:word _ handler:expression _ ";" _ {
+        return {type: "event", phase: phase, event: type, handler: handler};
     }
     / target:expression _ arrow:(":" / "<->" / "<-") _ source:expression _
-      descriptor:("," _ name:word _ ":" _ expression:expression _)*
+      descriptor:("," _ name:word _ ":" _ expression:expression _)* _ ";" _
     {
         var result = {type: STATEMENTS[arrow], args: [
             target,
@@ -525,11 +520,11 @@ statement
             for (var i = 0; i < descriptor.length; i++) {
                 describe[descriptor[i][2]] = descriptor[i][6];
             }
-            result.descriptor = describe;
+            result.descriptor = {type: "record", args: describe};
         }
         return result;
     }
-    / name:word _ expression:expression _ {
+    / name:word _ expression:expression _ ";" _ {
         return {type: "unit", name: name, value: expression};
     }
 

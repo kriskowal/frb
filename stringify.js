@@ -212,7 +212,7 @@ stringify.semantics = {
         },
 
         event: function (syntax, scope, stringify) {
-            return syntax.when + " " + syntax.event + " -> " + stringify(syntax.listener, scope);
+            return syntax.phase + " " + syntax.event + " " + stringify(syntax.handler, scope);
         },
 
         binding: function (arrow, syntax, scope, stringify) {
@@ -222,8 +222,8 @@ stringify.semantics = {
 
             var descriptor = syntax.descriptor;
             if (descriptor) {
-                for (var name in descriptor) {
-                    trailer += ", " + name + ": " + stringify(descriptor[name], scope);
+                for (var name in descriptor.args) {
+                    trailer += ", " + name + ": " + stringify(descriptor.args[name], scope);
                 }
             }
 
@@ -261,7 +261,13 @@ stringify.semantics = {
         },
 
         sheet: function (syntax, scope, stringify) {
-            return "\n" + syntax.blocks.map(function (block) {
+            var primaryBlock = syntax.statements.map(function (statement) {
+                return stringify(statement, scope) + ";\n";
+            }).join("");
+            if (primaryBlock && syntax.blocks.length) {
+                primaryBlock += "\n";
+            }
+            return "\n" + primaryBlock + syntax.blocks.map(function (block) {
                 return stringify(block, scope);
             }).join("\n") + "\n";
         }
