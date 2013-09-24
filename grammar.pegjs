@@ -481,13 +481,16 @@ sheet
     }
 
 block
-    = "@" label:word _ "{" _ statements:statement* "}" _ {
+    = "@" label:$(label) _ "{" _ statements:statement* "}" _ {
         return {
             type: "block",
             label: label,
             statements: statements
         };
     }
+
+label
+    = [a-zA-Z_0-9]+ ( ":" [a-zA-Z_0-9]+ )*
 
 module
     = chars:[a-zA-Z_0-9.-]+ {
