@@ -291,8 +291,8 @@ module.exports = (function() {
         peg$c90 = function() { return {type: "literal", value: null}; },
         peg$c91 = "@",
         peg$c92 = "\"@\"",
-        peg$c93 = function(name) {
-                return {type: "component", label: name};
+        peg$c93 = function(label) {
+                return {type: "component", label: label};
             },
         peg$c94 = "$",
         peg$c95 = "\"$\"",
@@ -2174,7 +2174,12 @@ module.exports = (function() {
                         if (peg$silentFails === 0) { peg$fail(peg$c92); }
                       }
                       if (s1 !== null) {
-                        s2 = peg$parseword();
+                        s2 = peg$currPos;
+                        s3 = peg$parselabel();
+                        if (s3 !== null) {
+                          s3 = input.substring(s2, peg$currPos);
+                        }
+                        s2 = s3;
                         if (s2 !== null) {
                           peg$reportedPos = s0;
                           s1 = peg$c93(s2);

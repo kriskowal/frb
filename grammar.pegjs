@@ -317,8 +317,8 @@ value
     / "true" { return {type: "literal", value: true}; }
     / "false" { return {type: "literal", value: false}; }
     / "null" { return {type: "literal", value: null}; }
-    / "@" name:word {
-        return {type: "component", label: name};
+    / "@" label:$(label) {
+        return {type: "component", label: label};
     }
     / "$" name:word {
         return {type: "property", args: [
