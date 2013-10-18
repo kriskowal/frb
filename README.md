@@ -185,6 +185,24 @@ bind(object, "average", {"<-": "array.average()"});
 expect(object.average).toEqual(2);
 ```
 
+### Rounding
+
+The `round`, `floor`, and `ceil` methods operate on numbers and return
+the nearest integer, the nearest integer toward -infinity, and the
+nearest integer toward infinity respectively.
+
+```javascript
+var object = {number: -0.5};
+Bindings.defineBindings(object, {
+    "round": {"<-": "number.round()"},
+    "floor": {"<-": "number.floor()"},
+    "ceil": {"<-": "number.ceil()"}
+});
+expect(object.round).toBe(0);
+expect(object.floor).toBe(-1);
+expect(object.ceil).toBe(0);
+```
+
 ### Last
 
 FRB provides an operator for watching the last value in an Array.
@@ -2651,6 +2669,12 @@ available.
 -   An "only" function call observes the only value of the input values,
     if there is only one such value.  If there are none or more than
     one, the only function emits undefined.
+-   A "round" function call observes the nearest integer to the input
+    value, rounding `0.5` toward infinity.
+-   A "floor" function call observes the nearest integer to the input
+    value toward -infinity;
+-   A "ceil" function call observes the nearest integer to the input
+    value toward infinity;
 -   A "has" function call observes the source collection for whether it
     contains an observed value.
 -   A "tuple" expression observes a source value and emits a single
@@ -2951,6 +2975,7 @@ For the ternary operator:
 
 For all function calls, the right hand side is a tuple of arguments.
 
+<<<<<<< HEAD
 -   `reversed()`
 -   `enumerate()`
 -   `flatten()`
@@ -2970,6 +2995,26 @@ For all function calls, the right hand side is a tuple of arguments.
 -   `values()`
 -   `entries()`
 -   `defined()`
+=======
+-   `reversed`
+-   `enumerate`
+-   `flatten`
+-   `sum`
+-   `average`
+-   `startsWith`
+-   `endsWith`
+-   `contains`
+-   `join`
+-   `split`
+-   `range`
+-   `keys`
+-   `values`
+-   `entries`
+-   `round`
+-   `floor`
+-   `ceil`
+
+>>>>>>> round
 
 ### Observers and Binders
 
