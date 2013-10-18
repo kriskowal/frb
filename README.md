@@ -185,6 +185,24 @@ bind(object, "average", {"<-": "array.average()"});
 expect(object.average).toEqual(2);
 ```
 
+### Rounding
+
+The `round`, `floor`, and `ceil` methods operate on numbers and return
+the nearest integer, the nearest integer toward -infinity, and the
+nearest integer toward infinity respectively.
+
+```javascript
+var object = {number: -0.5};
+Bindings.defineBindings(object, {
+    "round": {"<-": "number.round()"},
+    "floor": {"<-": "number.floor()"},
+    "ceil": {"<-": "number.ceil()"}
+});
+expect(object.round).toBe(0);
+expect(object.floor).toBe(-1);
+expect(object.ceil).toBe(0);
+```
+
 ### Last
 
 FRB provides an operator for watching the last value in an Array.
@@ -2272,6 +2290,12 @@ available.
     of the spliced values, added and removed.
 -   An "average" function call observes the average of the input values,
     much like "sum".
+-   A "round" function call observes the nearest integer to the input
+    value, rounding `0.5` toward infinity.
+-   A "floor" function call observes the nearest integer to the input
+    value toward -infinity;
+-   A "ceil" function call observes the nearest integer to the input
+    value toward infinity;
 -   A "has" function call observes the source collection for whether it
     contains an observed value.
 -   A "tuple" expression observes a source value and emits a single
@@ -2530,6 +2554,9 @@ For all function calls, the right hand side is a tuple of arguments.
 -   `keys`
 -   `values`
 -   `entries`
+-   `round`
+-   `floor`
+-   `ceil`
 
 
 ### Observers and Binders
